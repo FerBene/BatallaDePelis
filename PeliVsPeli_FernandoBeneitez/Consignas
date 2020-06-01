@@ -1,0 +1,326 @@
+**********************************************************************************************************
+************************************      CONSIGNAS      *************************************************
+**********************************************************************************************************
+
+Guía 1: Preparación del entorno y del proyecto.
+
+    Preparación
+        Si todavía no los tenés, instalá Node.js, Express, MySQL y Postman.
+        Descargá los recursos descargables.
+
+    Paso 1: Configuración de entorno
+    
+        Ejecutá el script inicial de MySQL que se encuentra en los recursos descargables: este va a crear 
+        la base de datos y las tablas con datos de películas, géneros, actores/actrices y directores/as.
+        Creá el esqueleto de tu proyecto de Node.js con Express, y creá el archivo server.js.
+
+    Paso 2: Creá el modelo de datos para las competencias.
+    
+        Creá una tabla con las competencias para que cumpla con estas condiciones.
+        Todas las competencias entre películas van a tener un nombre, seguramente en forma de pregunta, 
+        como “¿Cuál es la mejor película?”, “¿Qué drama te hizo llorar más?”, “¿Cuál es la peli más bizarra?”.
+        También van a precisar tener un identificador, que para simplificar puede ser numérico y 
+        autoincremental.
+
+    Paso 3: Insertá en la base de datos algunas competencias.
+
+        Usando MySQL por consola o a través de tu interfaz favorita, escribí las queries necesarias para 
+        insertar en la base de datos algunas competencias.
+        Podés usar los nombres de competencias que te parezcan más originales.
+        Una vez insertados, consultá los datos para verificar que esté todo bien.
+
+    Paso 4: Listá las competencias existentes.
+        
+        Para poder listar las competencias, primero vas a tener que:
+
+            Realizar la conexión del back-end con la base de datos.
+            Crear el controlador (que te va a quedar hecho para el resto de la aplicación).
+            Después vas a programar el método para listar las competencias y retornarlas al front-end. 
+            Para hacer esto, realizá las siguientes tareas:
+
+            A. Interpretá el front-end
+                Fijate que en el front-end se está llamando al método buscarCompetencias 
+                (SERA OBTENERCOMPETENCIAS???)
+                que está declarado dentro de competencia.js.
+                También en el front-end, en competencia.js, está el método cargarCompetencias, que se va 
+                a encargar de acomodar esos datos en el html para que se visualicen. 
+                ¿Qué debería contener data, que contiene la respuesta del back-end?
+                (   ??????  NO CACE UN FULBO   )
+
+            B. Conexión a MySQL
+                Escribí la consulta en MySQL para obtener los datos que precisamos de las competencias. 
+                ¿Listo? Ahora vamos a tener que conseguir que lo haga el back-end.
+                Creá en back-end el archivo de configuración de conexión con la base de datos.
+
+            C. Controlador
+                Creá en el back-end el controlador (competenciasController.js o como prefieras llamarle) 
+                y desarrollá la lógica en el controlador para la función que reciba la solicitud de listar 
+                las competencias existentes (recordá que hay que exportarla). Se puede ir probando desde 
+                Postman.
+
+            D. Verificación
+                Verificá que funcione desde el front-end. ¡Ya tenés una parte del proyecto funcionando!
+
+
+Guía 2 Peli vs. Peli
+    
+    Paso 1: Obtené las películas para votar
+        
+        Ahora tenés que crear el código en backend para obtener dos películas aleatorias para la 
+        competencia creada. ¡Vamos paso a paso!
+
+        Antes de empezar
+        Ingresá en el navegador a ver el listado de competencias que existen (index.html) y hacé click 
+        en una de las competencias que creaste y listaste ahí: se abre el archivo votar.html con un 
+        parámetro en la url que corresponde al identificador de esa competencia. Ahora, buscá en el 
+        archivo del front-end, competencia.js, la función a la que está llamando para cargar esas 
+        opciones, que es obtenerOpciones. Al igual que antes, tenés que tomar nota de dos cuestiones:
+            Cuál es el endpoint o ruta a la que llama.
+            Cuáles son los atributos del objeto que retorna esa llamada que utiliza en cargarOpciones, 
+            para entender cómo deberías devolver la respuesta desde el back-end.
+        Desarrollá la lógica en el controlador para la función que reciba la solicitud de obtener dos 
+        películas. Podés crear primero la query y probarla desde MySQL, recordando cuáles son los campos 
+        que precisás obtener para luego usar en el front-end.
+        Recordá agregar el método al controlador del back-end, exportarlo, y agregar la ruta en server.js.
+        Se puede ir probando desde Postman cómo está retornando la respuesta, en la misma URL que desde el 
+        cliente.
+
+    Paso 2: Retorná códigos de error si la competencia no existe
+        
+        Verificá antes de retornar la respuesta de las dos películas para votar, que la competencia con 
+        el identificador enviado realmente exista.
+        Si no existe, en lugar de responder con el resultado de la query, deberías retornar el código 
+        correspondiente (404). Si existe, sólo una vez que se haya verificado que existe, deberías proseguir 
+        armando la respuesta a enviar al cliente.
+
+    Paso 3: Agregá a los datos los votos
+        
+        Modificá el modelo de datos incorporando los votos. ¿Qué atributos van a identificar a un voto? 
+        Consiste en la elección de una película asociada a una competencia.
+        Podés diseñar este sencillo DER en papel o de forma digital, para ordenar y persistir las decisiones 
+        tomadas. Fijate qué campos tendría la tabla, y creala en MySQL.
+
+    Paso 4: Recibí y guardá un voto
+        
+        Creá el código en el backend para recibir el voto a una película de una competencia. Para eso, 
+        te sugerimos que sigas estos pasos:
+        Antes de empezar
+            En el front-end, en el archivo competencia.js está el método votar que es el encargado de que, 
+            al clickear en una de las dos películas, envíe al back-end el POST con la información de la 
+            competencia y la película elegida. Fijate allí dos cosas: cuál es el endpoint o ruta al que se 
+            llama y cómo es el body o cuerpo del request.
+
+        Query en MySQL
+            Escribí la consulta MySQL para insertar los datos de un voto, ¿cómo queda esa consulta? 
+            ¿Cuáles son los datos que van a ser variables y dependiendo de la competencia y película 
+            elegida de esa consulta?
+
+        Controlador
+            Agregá el método en el controlador de competencias. No te olvides de validar, como antes, que 
+            existan tanto la competencia como la película seleccionadas. Recordá exportar el método, y 
+            agregar la ruta en server.js, observando con qué método o verbo http sería en este caso.
+
+        Verificación
+            Verificá que funcione desde el front-end, votando por una película en una competencia y viendo 
+            que el voto se haya guardado.
+
+    Paso 5: Obtené los resultados de una competencia
+        
+        Desarrollá la lógica en el backend para obtener las 3 películas más votadas de una competencia, 
+        siguiendo estos pasos:
+
+        Antes de empezar
+            Mirá en el front-end cuál es el endpoint (ruta) a la que se llama, dentro de competencia.js, 
+            en el método obtenerResultados.
+
+            En el código de cargarResultados vas a encontrar implícita la estructura del JSON que debe 
+            retornar este endpoint. Escribí la consulta MySQL para obtener los resultados con los campos que 
+            sean necesarios.
+
+            Podés usar un algoritmo para elegir simplemente las 3 películas más votadas, o podés investigar 
+            otras estrategias para hacerlo, teniendo en cuenta la cantidad de veces que cada una de las 
+            películas fue ofrecida como opción a votar como variable.
+
+            En caso de utilizar alguna variante, fijate si tenés persistidos todos los datos necesarios o si 
+            hace falta guardar algún dato extra en algún momento (por ejemplo, guardar en una tabla 
+            adicional cada vez que una película es ofrecida como opción para que la voten).
+
+        Controlador
+            Agregá el método en el controlador de competencias, recordá exportar el método y agregar la 
+            ruta en server.js. No te olvides de validar que la competencia exista y retornar código de error 
+            si no es así.
+
+        Verificación
+            Verificá que funcione desde el front-end, obteniendo los resultados de una competencia en la que 
+            ya hayas ingresado varios votos.
+
+
+Guía 3 de Peli vs. Peli
+    
+    Paso 1: Permití la creación de una nueva competencia
+        
+        Creá el código en el back-end para recibir y guardar los datos de una nueva competencia. Esto 
+        involucra varias tareas:
+
+        Mirá en el front-end cuál es el endpoint (ruta) a la que se llama, dentro de crear.js, y cuál 
+        es el método usado. Por ahora, sólo considerá que vas a recibir en el back-end el nombre de la 
+        competencia en el body (cuerpo) de la request (solicitud) http.
+        Agregá la lógica para cargar en la base de datos la nueva competencia al recibir la solicitud 
+        (la query ya la tenías escrita desde antes) y retornar que todo salió bien.
+        Bonus: Podrías validar que el nombre sea único (que no exista otra competencia con el mismo nombre 
+        cargada) y en caso de que no lo sea, no guardarla y retornar error por la validación (422).
+
+    Paso 2: Habilitá la eliminación de votos de una competencia
+        Creá el código en el back-end para reiniciar una competencia, es decir, eliminar todos los votos 
+        de esta. Conseguilo realizando estas tareas:
+
+        Antes de empezar
+            En reiniciar.js está la llamada a la api donde consta la ruta y método con que se espera reiniciar 
+            una competencia. Escribir la query en MySQL para realizar esta operación. ¿Vas a usar baja lógica o 
+            física?
+
+        Controlador
+            Hacer las modificaciones necesarias en el controlador y en server.js en el back-end para recibir 
+            esta solicitud y responderla.
+            Acordate de verificar que la competencia que se quiere reiniciar, efectivamente exista, y caso 
+            contrario, retornar el error correspondiente.
+
+    Paso 3: Permití la creación de competencias por género
+        
+        Agregá la posibilidad de que se creen competencias por género (por ejemplo, “¿Cuál es la comedia 
+        que más te hizo reír?”, “¿Cuál es el mejor drama?”, etc). Para eso, realizá estas tareas:
+
+        Antes de empezar
+            Cambiá el modelo de datos para poder soportar que una competencia pueda estar asociada a un género.
+            Vas a tener que modificar una tabla agregando la referencia al género. No te olvides de crear 
+            los constraints necesarios también.
+
+        Controlador
+            Vas a tener que desarrollar el endpoint llamado por cargarGeneros en competencia.js Para crear 
+            una nueva competencia por género, agregá el campo recibido al crear una nueva competencia.
+            Acordate que la competencia puede o no tener un género. Todavía deberías poder crear 
+            competencias sin este criterio (¿Cuál es la mejor película?).
+            Hacé las modificaciones para poder votar en una competencia por género.
+            Los cambios deberían estar en el endpoint que obtiene las dos opciones de películas para votar, 
+            que ahora no son más dos películas cualesquiera siempre, sino que, si la competencia tiene 
+            asociado un género, se trata de dos películas cualesquiera de ese género.
+
+        Verificación
+            Probá al finalizar que siga funcionando crear una competencia con y sin género, y que puedas votar 
+            en competencias con y sin género también.
+
+    Paso 4: Permití la creación de competencias por director/a
+
+        La idea es permitir que se creen competencias de películas de un/a director/a, al estilo de 
+        “¿Cuál es la mejor película de Steven Spielberg?”. Podés guiarte con estas tareas:
+
+        Al crear una nueva competencia
+            Modificá el modelo de datos para agregar esta información a las competencias. Desarrollá el 
+            endpoint para obtener los/as directores/as tal como lo espera en el front-end cargarDirectores en 
+            competencia.js. Al crear una nueva competencia, considerá que ahora, además, puede tener este dato.
+            Se pueden seleccionar más de un criterio al crear una competencia. Vas a tener que validar que 
+            haya al menos dos películas con el criterio elegido, porque seguramente no existan dos películas 
+            dirigidas por Steven Spielberg que además sean comedias.
+
+        Al votar en una competencia
+            Realizá las modificaciones para poder votar en una competencia de películas por director/a.
+
+        Verificación
+            Acordate de probar que siga funcionando todo en competencias generales, por género, y agregarle 
+            las pruebas de competencias por director/a y por género y director/a. Probá siempre que sigan 
+            funcionando todas las opciones para crear una nueva competencia y también para obtener las 
+            opciones a votar.
+
+    Paso 5: Permití la creación de competencias por actor/actriz
+        
+        Agregá la posibilidad de crear una competencia de películas en que actuó un/a actor/actriz 
+        (ejemplo, mejor película con Sandra Bullock). Para eso:
+
+        Al crear una nueva competencia
+            Modificá el modelo de datos. Hacé las modificaciones para responder desde la api a lo solicitado 
+            desde el front-end en cargarActores, en competencia.js. Al crear una nueva competencia, considerá
+            que ahora, además, puede tener este dato.
+            Al votar en una competencia
+            Hacé las modificaciones para considerar este criterio a la hora de ofrecer dos opciones de 
+            películas a votar. Si es una competencia por actor/actriz, se le agrega este criterio.
+
+        Verificación
+            Probá siempre que sigan funcionando todas las opciones para crear una nueva competencia y también 
+            para obtener las opciones a votar. 
+
+    Paso 6: Permití la eliminación competencias
+        
+        ¿Qué pasa si se quiere eliminar una competencia por completo? La API es llamada desde eliminar.js, 
+        utiliza el método delete. En la base de datos, ¿te parece que sería mejor hacer una baja lógica o 
+        física de las competencias? Queda a tu elección, pero recordá que si hacés una baja física, vas a 
+        tener que hacer la eliminación en cascada de los votos de esa competencia.
+
+        Vas a tener que modificar el modelo de datos, si es que te resulta necesario. Además, agregá la 
+        ruta con el método en la api para responder a la solicitud.
+
+    Paso 7: Modificar el nombre de una competencia
+        
+        Por el momento, sólo vamos a permitir modificar el nombre de una competencia. Primero, escribí 
+        la query en MySQL para hacer esta alteración. Después, en editar.js, vas a encontrar el endpoint 
+        llamado. Modificá el back-end para que pueda recibir esta solicitud y ejecutar la query que 
+        corresponde. Probá que funcione con distintos cambios.
+
+        Ahora ya tenés el proyecto completamente funcionando y falta muy poquito para terminarlo. ¡Hacé 
+        un repaso de todo lo que se puede hacer con tu aplicación!
+
+
+Guía 4: Deploy (OPCIONAL)
+
+    ¡Ahora llegó la hora de salir a la cancha! Para eso, vas a realizar algunos ajustes al proyecto 
+    para que se “adapte” a este nuevo entorno, y luego publicar el back-end y el front-end por separado, 
+    pero conectados.
+
+    Recuerda que esta guía es opcional, no debes completarla para aprobar el proyecto. Esto es porque 
+    existen muchos entornos de deploy, y no es obligatorio que uses Docker para publicar tu proyecto. 
+    Es tu decisión agregar esta parte a tu proyecto o no.
+
+    Paso 1: Preparación del proyecto
+        Lo primero a hacer es preparar el proyecto para que pueda adaptarse al nuevo entorno, vas a tener 
+        que preparar un script con todo el código SQL que inicialice la base de datos y separar el front-end 
+        del front-end en repositorios separados. Vamos paso a paso para conseguir tener todo listo:
+
+        Variables de entorno
+            Modificá en el back-end lo necesario para que las configuraciones que deban ser diferentes en el 
+            entorno de producción (a priori, relacionadas con la base de datos) se tomen de variables de 
+            entorno. Definí esas variables de entorno en un archivo .env.
+
+        Base de datos
+            Escribí en un único archivo el script necesario para crear la estructura de tablas y relaciones 
+            en la base de datos, que además inserte todos los datos iniciales al igual que el script original 
+            que usás en este proyecto. Va a ser necesario que separes el código del back-end y del front-end 
+            en dos proyectos distintos, para no requerir configuraciones adicionales. Subí ambos proyectos a 
+            dos repositorios diferentes de Github.com.
+
+    Paso 2: Deploy de back-end en Docker Playground
+        
+        Lo primero que vas a “deployar” es el back-end. Vamos a hacerlo utilizando Docker en Docker 
+        Playground, para lo cual vas a precisar crear los archivos Dockerfile que permitan armar las imágenes 
+        para los contenedores. Recordemos los pasos necesarios:
+
+        Primero local
+            Creá el Dockerfile para la imagen que va a contener Node.js con Express.
+            Creá el Dockerfile para la imagen que va a contener MySQL.
+            Realizá las modificaciones necesarias, si hay alguna, en las variables de entorno en .env.
+            Probá que localmente funcionen tus Dockerfiles: construí ambas imágenes utilizando docker build 
+            con los parámetros necesarios, y luego creá containers vinculados que las ejecuten.
+            
+        Subir a producción
+            Subí los cambios al repositorio Github.com.
+            Ingresá en Docker Playground y creá una nueva instancia.
+            Creá los dos containers vinculados que ejecuten las imágenes en dicha instancia.
+            Probá que el back-end de la aplicación responda correctamente.
+    
+    Paso 3: Deploy de front-end en github.io.
+
+        Ahora, a “deployar” el front-end. Tené en cuenta que debe ir conectado con el back-end que 
+        publicaste en el paso anterior. Recordá que tenés que: Configurar la variable que contiene la 
+        dirección IP del servidor en el front-end. Actualizar los cambios en el repositorio en Github.com. 
+        Ingresar al proyecto en Github.com a través de la web y, utilizando Github pages, publicar el 
+        proyecto.
+
+        ¡Tu aplicación está publicada! ¡Hora de compartirla con todo el mundo!
